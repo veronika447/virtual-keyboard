@@ -7,6 +7,7 @@ document.body.appendChild(title);
 
 let textarea = document.createElement('textarea');
 textarea.className = "textarea";
+textarea.placeholder = "Клавиатура создана в опеpационной системе Windows. Для переключения языка нажмите Alt + Shift"
 document.body.append(textarea);
 
 let list = document.createElement('ul');
@@ -61,7 +62,7 @@ const listItems = document.querySelectorAll('.list-item');
 
 window.addEventListener("keydown", (e) => {
     listItems.forEach((el, i) => {
-        if (e.key == el.textContent && el.textContent !== 'Alt' && el.textContent !== 'Shift')
+        if ((e.key == el.textContent || e.key == el.textContent.toUpperCase()) && el.textContent !== 'Alt' && el.textContent !== 'Shift')
             el.classList.add('active');
         if (e.code == 'ControlLeft' && el.textContent == 'Ctrl' && i === 55) {
             el.classList.add('active')
@@ -91,7 +92,7 @@ window.addEventListener("keydown", (e) => {
             el.classList.add('active')
         }
         if (e.code == 'CapsLock' && el.textContent == 'Caps Lock') {
-            el.classList.add('active')
+            el.classList.toggle('active')
         }
         if (e.code == 'ShiftLeft' && i === 42) {
             el.classList.add('active')
@@ -110,7 +111,7 @@ window.addEventListener("keydown", (e) => {
 
 window.addEventListener("keyup", (e) => {
     listItems.forEach((el, i) => {
-        if (e.key == el.textContent) { el.classList.remove('active') }
+        if (e.key == el.textContent || e.key == el.textContent.toUpperCase()) { el.classList.remove('active') }
         if (e.key == 'Control' && el.textContent == 'Ctrl') {
             el.classList.remove('active')
         }
@@ -135,8 +136,14 @@ window.addEventListener("keyup", (e) => {
         if (e.code == 'ArrowRight' && i === 62) {
             el.classList.remove('active')
         }
-        if (e.code == 'CapsLock' && el.textContent == 'Caps Lock') {
-            el.classList.remove('active')
-        }
+        // if (e.code == 'CapsLock' && el.textContent == 'Caps Lock') {
+        //     el.classList.remove('active')
+        // }
+    })
+})
+
+symbols.forEach(el => {
+    el.addEventListener("click", (e) => {
+        textarea.value += el.textContent
     })
 })
