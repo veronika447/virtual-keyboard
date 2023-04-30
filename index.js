@@ -19,11 +19,6 @@ let listItemEn = [['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['
     'Shift', ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], [',', '<'], ['.', '>'], ['/', '?'], '⏶', 'Shift',
     'Ctrl', 'Win', 'Alt', [' '], 'Alt', '⏴', '⏷', '⏵', 'Ctrl'];
 
-// let listItemEnUp = {
-//     0: '~', 1: '!', 2: '@', 3: '#', 4: '$', 5: '%', 6: '^', 7: '&', 8: '*', 9: '(', 10: ')', 11: '_', 12: '+',
-//     23: '{', 24: '}', 25: '|', 35: ':', 36: '""', 44: '<', 45: '>', 46: '?'
-// }
-
 
 function createKeyboard(arr) {
     arr.forEach(el => {
@@ -68,40 +63,6 @@ function createKeyboard(arr) {
         }
         list.appendChild(listItem);
     })
-
-    // for (let i = 0; i < arr.length; i++) {
-    //     let listItem = document.createElement('li');
-    //     listItem.innerHTML = arr[i];
-    //     listItem.className = "list-item";
-    //     if ((i >= 0 && i < 13) || (i >= 15 && i < 28) || (i >= 30 && i < 41) || (i >= 43 && i < 53) || i === 58) {
-    //         listItem.classList.add('symbol');
-    //         if (arr[i] == ' ') {
-    //             listItem.classList.add('space')
-    //         }
-    //     }
-    //     else {
-    //         listItem.classList.add('func');
-
-    //         if (arr[i] == 'Shift') {
-    //             listItem.classList.add('shift')
-
-    //         }
-    //         if (arr[i] == 'Enter') {
-    //             listItem.classList.add('enter')
-
-    //         }
-    //         if (arr[i] == 'Backspace') {
-    //             listItem.classList.add('backspace')
-
-    //         }
-    //         if (arr[i] == 'Caps Lock') {
-    //             listItem.classList.add('caps')
-
-    //         }
-    //     }
-    //     list.appendChild(listItem);
-    // }
-
     return document.body.append(list);
 }
 
@@ -149,7 +110,7 @@ window.addEventListener("keydown", (e) => {
             el.classList.add('active')
         }
         if (e.code == 'CapsLock' && el.textContent == 'Caps Lock') {
-            el.classList.toggle('active')
+            capsToDo()
         }
         if (e.code == 'ShiftLeft' && i === 42) {
             el.classList.add('active');
@@ -243,5 +204,20 @@ shift.forEach(el => {
 shift.forEach(el => {
     el.addEventListener('mouseup', shiftToDo)
 })
+
+const caps = document.querySelector('.caps');
+
+function capsToDo() {
+    caps.classList.toggle('active');
+    let regexp = /[a-z]/i;
+    symbolSpanOn.forEach(el => {
+        if (regexp.test(el.textContent))
+            if (caps.classList.contains('active'))
+                el.textContent = el.textContent.toLocaleUpperCase();
+            else el.textContent = el.textContent.toLocaleLowerCase()
+    })
+}
+
+caps.addEventListener('click', capsToDo)
 
 
