@@ -7,7 +7,7 @@ document.body.appendChild(title);
 
 let textarea = document.createElement('textarea');
 textarea.className = "textarea";
-textarea.placeholder = "Клавиатура создана в опеpационной системе Windows. Для переключения языка нажмите левый Alt + Shift"
+textarea.placeholder = "Клавиатура создана в опеpационной системе Windows. Для переключения языка нажмите левый Alt + Ctrl"
 document.body.append(textarea);
 
 
@@ -23,9 +23,7 @@ let listItemRu = [['ё', 'Ё'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';']
     'Shift', ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], ['.', ','], '⏶', 'Shift',
     'Ctrl', 'Win', 'Alt', [' '], 'Alt', '⏴', '⏷', '⏵', 'Ctrl'];
 
-
-let isEn = true;
-// localStorage.setItem('isEn', isEn);
+let isEn = localStorage.getItem('isEn') ? (localStorage.getItem('isEn') == 'true') : true;
 
 function createKeyboard(arr) {
     let list = document.createElement('ul');
@@ -55,19 +53,21 @@ function createKeyboard(arr) {
             listItem.classList.add('func');
             if (el == 'Shift') {
                 listItem.classList.add('shift')
-
             }
             if (el == 'Enter') {
                 listItem.classList.add('enter')
-
             }
             if (el == 'Backspace') {
                 listItem.classList.add('backspace')
-
             }
             if (el == 'Caps Lock') {
                 listItem.classList.add('caps')
-
+            }
+            if (el == 'Tab') {
+                listItem.classList.add('tab')
+            }
+            if (el == 'Delete') {
+                listItem.classList.add('del')
             }
         }
         list.appendChild(listItem);
@@ -80,8 +80,8 @@ createKeyboard(listItemRu);
 const lists = document.querySelectorAll('.list');
 let listItems;
 
-function howLanguge() {
-    if (isEn) {
+function whichLanguge() {
+    if (isEn === true) {
         lists.forEach((el, i) => {
             if (i === 1) {
                 el.classList.remove('ul-on')
@@ -93,7 +93,7 @@ function howLanguge() {
             }
         })
     }
-    else {
+    if (isEn === false) {
         lists.forEach((el, i) => {
             if (i === 0) {
                 el.classList.remove('ul-on')
@@ -108,7 +108,7 @@ function howLanguge() {
     listItems = document.querySelectorAll('.ul-on > li');
 }
 
-howLanguge()
+whichLanguge()
 
 
 
@@ -117,6 +117,7 @@ const symbolsSpan = document.querySelectorAll('.span');
 const symbolSpanOn = document.querySelectorAll('li > .on')
 
 window.addEventListener("keydown", (e) => {
+    textarea.focus();
     symbolSpanOn.forEach(item => {
         if (e.key == item.textContent || e.key == item.textContent.toLocaleUpperCase()) {
             item.parentElement.classList.add('active')
@@ -164,10 +165,16 @@ window.addEventListener("keydown", (e) => {
             shiftToDo();
         }
         if (e.code == 'AltLeft' && i === 57) {
-            el.classList.add('active')
+            e.preventDefault();
+            el.classList.add('active');
+
         }
         if (e.code == 'AltRight' && i === 59) {
-            el.classList.add('active')
+            e.preventDefault();
+            el.classList.add('active');
+        }
+        if (e.key == 'Tab') {
+            e.preventDefault();
         }
     })
 });
@@ -268,18 +275,19 @@ caps.forEach(el => {
     el.addEventListener('click', capsToDo);
 })
 
-document.addEventListener('keydown', (e1) => {
-    if (e1.code == 'ControlLeft' || e1.code == 'AltLeft') {
-        document.addEventListener('keydown', (e2) => {
-            if (e2.code == 'AltLeft' || e2.code == 'ControlLeft') {
-                // localStorage.setItem('isEn', isEn);
-                isEn = !isEn;
-                // localStorage.isEn = isEn;
-                howLanguge()
-            }
+const keyMap = {};
 
-        })
+document.addEventListener('keydown', (e1) => {
+    keyMap[e1.code] = true;
+    if (keyMap['ControlLeft'] && keyMap['AltLeft']) {
+        isEn = !isEn;
+        localStorage.setItem('isEn', isEn);
+        whichLanguge()
     }
+})
+
+document.addEventListener('keyup', (e) => {
+    delete keyMap[e.code];
 })
 
 
