@@ -22,7 +22,7 @@ const listItemRu = [['ё', 'Ё'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';
 
 let isEn = localStorage.getItem('isEn') ? (localStorage.getItem('isEn') == 'true') : true;
 
-function createKeyboard(arr) {
+const createKeyboard = (arr) => {
   const list = document.createElement('ul');
   list.className = 'list';
   arr.forEach((el) => {
@@ -85,7 +85,7 @@ createKeyboard(listItemRu);
 const lists = document.querySelectorAll('.list');
 let listItems;
 
-function whichLanguge() {
+const whichLanguge = () => {
   if (isEn === true) {
     lists.forEach((el, i) => {
       if (i === 1) {
@@ -119,7 +119,6 @@ const symbolSpanOn = document.querySelectorAll('li > .on');
 
 window.addEventListener('keydown', (e) => {
   textarea.focus();
-  // textarea.setSelectionRange(textarea.value.length, textarea.value.length);
   symbolSpanOn.forEach((item) => {
     if (e.key == item.textContent || e.key == item.textContent.toLocaleUpperCase()) {
       item.parentElement.classList.add('active');
@@ -235,7 +234,7 @@ symbols.forEach((el) => {
 
 const shift = document.querySelectorAll('.shift');
 
-function shiftToDo() {
+const shiftToDo = () => {
   symbolsSpan.forEach((el) => {
     if (el.classList.contains('on') && el.textContent !== ' ') {
       el.classList.remove('on');
@@ -256,7 +255,7 @@ shift.forEach((el) => {
 
 const caps = document.querySelectorAll('.caps');
 
-function capsToDo() {
+const capsToDo = () => {
   caps.forEach((el) => {
     el.classList.toggle('active');
 
@@ -360,8 +359,6 @@ arrowDown.addEventListener('click', arrowDownToDo);
 const arrowUpToDo = () => {
   textarea.focus();
   const start = textarea.selectionStart;
-  console.log('\\n ', textarea.value.lastIndexOf('\n', start - 1));
-  console.log('start ', start);
   if (textarea.value.includes('\n') && (textarea.value.lastIndexOf('\n', start - 1) < start && textarea.value.lastIndexOf('\n', start - 1) != -1)) {
     const counter = textarea.value.slice(0, start).split('\n').reverse();
     textarea.setSelectionRange(start - counter[0].length - counter[1].length - 1, start - counter[0].length - counter[1].length - 1);
