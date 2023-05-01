@@ -94,3 +94,7 @@ body {
 .on {
     display: block;
 }
+
+.ul-on {
+    display: flex;
+}

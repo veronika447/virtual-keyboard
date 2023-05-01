@@ -7,11 +7,9 @@ document.body.appendChild(title);
 
 let textarea = document.createElement('textarea');
 textarea.className = "textarea";
-textarea.placeholder = "Клавиатура создана в опеpационной системе Windows. Для переключения языка нажмите Alt + Shift"
+textarea.placeholder = "Клавиатура создана в опеpационной системе Windows. Для переключения языка нажмите левый Alt + Shift"
 document.body.append(textarea);
 
-let list = document.createElement('ul');
-list.className = "list";
 
 let listItemEn = [['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['5', '%'], ['6', '^'], ['7', '&'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], 'Backspace',
     'Tab', ['q', 'Q'], ['w', 'W'], ['e', 'E'], ['r', 'R'], ['t', 'T'], ['y', 'Y'], ['u', 'U'], ['i', 'I'], ['o', 'O'], ['p', 'P'], ['[', '{'], [']', '}'], ['&#92;', '|'], 'Del',
@@ -19,8 +17,19 @@ let listItemEn = [['`', '~'], ['1', '!'], ['2', '@'], ['3', '#'], ['4', '$'], ['
     'Shift', ['z', 'Z'], ['x', 'X'], ['c', 'C'], ['v', 'V'], ['b', 'B'], ['n', 'N'], ['m', 'M'], [',', '<'], ['.', '>'], ['/', '?'], '⏶', 'Shift',
     'Ctrl', 'Win', 'Alt', [' '], 'Alt', '⏴', '⏷', '⏵', 'Ctrl'];
 
+let listItemRu = [['ё', 'Ё'], ['1', '!'], ['2', '"'], ['3', '№'], ['4', ';'], ['5', '%'], ['6', ':'], ['7', '?'], ['8', '*'], ['9', '('], ['0', ')'], ['-', '_'], ['=', '+'], 'Backspace',
+    'Tab', ['й', 'Й'], ['ц', 'Ц'], ['у', 'У'], ['к', 'К'], ['е', 'Е'], ['н', 'Н'], ['г', 'Г'], ['ш', 'Ш'], ['щ', 'Щ'], ['з', 'З'], ['х', 'Х'], ['ъ', 'Ъ'], ['&#92;', '/'], 'Del',
+    'Caps Lock', ['ф', 'Ф'], ['ы', 'Ы'], ['в', 'В'], ['а', 'А'], ['п', 'П'], ['р', 'Р'], ['о', 'О'], ['л', 'Л'], ['д', 'Д'], ['ж', 'Ж'], ['э', 'Э'], 'Enter',
+    'Shift', ['я', 'Я'], ['ч', 'Ч'], ['с', 'С'], ['м', 'М'], ['и', 'И'], ['т', 'Т'], ['ь', 'Ь'], ['б', 'Б'], ['ю', 'Ю'], ['.', ','], '⏶', 'Shift',
+    'Ctrl', 'Win', 'Alt', [' '], 'Alt', '⏴', '⏷', '⏵', 'Ctrl'];
+
+
+let isEn = true;
+// localStorage.setItem('isEn', isEn);
 
 function createKeyboard(arr) {
+    let list = document.createElement('ul');
+    list.className = "list";
     arr.forEach(el => {
         let listItem = document.createElement('li');
         listItem.className = "list-item";
@@ -63,15 +72,49 @@ function createKeyboard(arr) {
         }
         list.appendChild(listItem);
     })
-    return document.body.append(list);
+    document.body.append(list);
+}
+createKeyboard(listItemEn);
+createKeyboard(listItemRu);
+
+const lists = document.querySelectorAll('.list');
+let listItems;
+
+function howLanguge() {
+    if (isEn) {
+        lists.forEach((el, i) => {
+            if (i === 1) {
+                el.classList.remove('ul-on')
+                el.classList.add('off');
+            }
+            else {
+                el.classList.remove('off');
+                el.classList.add('ul-on')
+            }
+        })
+    }
+    else {
+        lists.forEach((el, i) => {
+            if (i === 0) {
+                el.classList.remove('ul-on')
+                el.classList.add('off')
+            }
+            else {
+                el.classList.remove('off');
+                el.classList.add('ul-on')
+            }
+        })
+    }
+    listItems = document.querySelectorAll('.ul-on > li');
 }
 
-createKeyboard(listItemEn)
+howLanguge()
+
+
 
 const symbols = document.querySelectorAll('.symbol');
-const listItems = document.querySelectorAll('.list-item');
 const symbolsSpan = document.querySelectorAll('.span');
-const symbolSpanOn = document.querySelectorAll('.on')
+const symbolSpanOn = document.querySelectorAll('li > .on')
 
 window.addEventListener("keydown", (e) => {
     symbolSpanOn.forEach(item => {
@@ -83,7 +126,7 @@ window.addEventListener("keydown", (e) => {
         if ((e.key == el.textContent) && el.textContent !== 'Alt' && el.textContent !== 'Shift')
             el.classList.add('active');
         if (e.code == 'ControlLeft' && el.textContent == 'Ctrl' && i === 55) {
-            el.classList.add('active')
+            el.classList.add('active');
         }
         if (e.code == 'ControlRight' && el.textContent == 'Ctrl' && i === 63) {
             el.classList.add('active')
@@ -205,19 +248,39 @@ shift.forEach(el => {
     el.addEventListener('mouseup', shiftToDo)
 })
 
-const caps = document.querySelector('.caps');
+const caps = document.querySelectorAll('.caps');
 
 function capsToDo() {
-    caps.classList.toggle('active');
-    let regexp = /[a-z]/i;
-    symbolSpanOn.forEach(el => {
-        if (regexp.test(el.textContent))
-            if (caps.classList.contains('active'))
-                el.textContent = el.textContent.toLocaleUpperCase();
-            else el.textContent = el.textContent.toLocaleLowerCase()
+    caps.forEach(el => {
+        el.classList.toggle('active');
+
+        let regexp = /[a-zа-яё]/i;
+        symbolSpanOn.forEach(item => {
+            if (regexp.test(item.textContent))
+                if (el.classList.contains('active'))
+                    item.textContent = item.textContent.toLocaleUpperCase();
+                else item.textContent = item.textContent.toLocaleLowerCase()
+        })
     })
 }
 
-caps.addEventListener('click', capsToDo)
+caps.forEach(el => {
+    el.addEventListener('click', capsToDo);
+})
+
+document.addEventListener('keydown', (e1) => {
+    if (e1.code == 'ControlLeft' || e1.code == 'AltLeft') {
+        document.addEventListener('keydown', (e2) => {
+            if (e2.code == 'AltLeft' || e2.code == 'ControlLeft') {
+                // localStorage.setItem('isEn', isEn);
+                isEn = !isEn;
+                // localStorage.isEn = isEn;
+                howLanguge()
+            }
+
+        })
+    }
+})
+
 
 
